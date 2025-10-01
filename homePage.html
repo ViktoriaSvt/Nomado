@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nomado - Travel Planner</title>
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+ <main>
+    <h1 class="heading">Nomado</h1>
+    <h3 class="sub-heading">a practical way to plan the future</h3>
+
+    <div class="todo-container">
+      <h1>Create Travel Plan</h1>
+      <form id="todo-form" class="form">
+        <input type="text" id="plan-name" placeholder="Destination" required>
+        <input type="number" id="hotel-cost" placeholder="Hotel Cost" required>
+        <input type="number" id="flight-cost" placeholder="Flight Cost" required>
+        <input type="number" id="food-cost" placeholder="Food Cost" required>
+        <input type="number" id="fun-cost" placeholder="Fun Cost" required>
+        <button type="submit" class="add-btn">Start New</button>
+      </form>
+      <h4>Accumulated: <span id="accumulated">0</span> AUD</h4>
+      <h4>Remaining: <span id="remaining">50000</span> AUD</h4>
+      <ul id="todo-list"></ul>
+    </div>
+  </main>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

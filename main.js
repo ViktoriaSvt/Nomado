@@ -21,54 +21,80 @@ document.addEventListener("DOMContentLoaded", () => {
     remainingEl.textContent = TOTAL_BUDGET - totalAccumulated;
   }
 
-  function renderTodos() {
-    todoList.innerHTML = "";
-    todos.forEach((todo) => {
-      const container = document.createElement("li");
+const UNSPLASH_ACCESS_KEY = "udUrPa4plbSwvOXwajRgT6oAZq9GbZCx-Kcy9U09PyE";
 
-      const h3 = document.createElement("h3");
-      h3.textContent = `Destination: ${todo.name}`;
-      container.appendChild(h3);
-
-      const h5 = document.createElement("h5");
-      h5.textContent = "Duration: 5 days";
-      container.appendChild(h5);
-
-      const ul = document.createElement("ul");
-
-      const liStay = document.createElement("li");
-      liStay.textContent = `Stay: ${todo.hotelCost} AUD`;
-      ul.appendChild(liStay);
-
-      const liFlight = document.createElement("li");
-      liFlight.textContent = `Flight: ${todo.flightCost} AUD`;
-      ul.appendChild(liFlight);
-
-      const liFood = document.createElement("li");
-      liFood.textContent = `Food: ${todo.foodCost} AUD`;
-      ul.appendChild(liFood);
-
-      const liFun = document.createElement("li");
-      liFun.textContent = `Fun: ${todo.funCost} AUD`;
-      ul.appendChild(liFun);
-
-      container.appendChild(ul);
-
-      const h6 = document.createElement("h6");
-      const totalCost = todo.hotelCost + todo.flightCost + todo.foodCost + todo.funCost;
-      h6.textContent = `Total: ${totalCost} AUD`;
-      container.appendChild(h6);
-
-      const removeBtn = document.createElement("button");
-      removeBtn.textContent = "✖️";
-      removeBtn.className = "remove-btn";
-      removeBtn.addEventListener("click", () => removeTodo(todo.id, container));
-      container.appendChild(removeBtn);
-
-      todoList.appendChild(container);
-    });
-    updateTotals();
+async function fetchDestinationImage(destination) {
+  try {
+    const res = await fetch(
+      `https://api.unsplash.com/photos/random?query=${encodeURIComponent(destination)}&client_id=${UNSPLASH_ACCESS_KEY}`
+    );
+    const data = await res.json();
+    return data.urls.small; 
+  } catch (err) {
+    console.error("Error fetching image:", err);
+    return null;
   }
+}
+
+async function renderTodos() {
+  todoList.innerHTML = "";
+  for (const todo of todos) {
+    const container = document.createElement("li");
+
+    const h3 = document.createElement("h3");
+    h3.textContent = `Destination: ${todo.name}`;
+    container.appendChild(h3);
+
+    const h5 = document.createElement("h5");
+    h5.textContent = "Duration: 5 days";
+    container.appendChild(h5);
+
+    const ul = document.createElement("ul");
+
+    const liStay = document.createElement("li");
+    liStay.textContent = `Stay: ${todo.hotelCost} AUD`;
+    ul.appendChild(liStay);
+
+    const liFlight = document.createElement("li");
+    liFlight.textContent = `Flight: ${todo.flightCost} AUD`;
+    ul.appendChild(liFlight);
+
+    const liFood = document.createElement("li");
+    liFood.textContent = `Food: ${todo.foodCost} AUD`;
+    ul.appendChild(liFood);
+
+    const liFun = document.createElement("li");
+    liFun.textContent = `Fun: ${todo.funCost} AUD`;
+    ul.appendChild(liFun);
+
+    container.appendChild(ul);
+
+    const h6 = document.createElement("h6");
+    const totalCost = todo.hotelCost + todo.flightCost + todo.foodCost + todo.funCost;
+    h6.textContent = `Total: ${totalCost} AUD`;
+    container.appendChild(h6);
+
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "✖️";
+    removeBtn.className = "remove-btn";
+    removeBtn.addEventListener("click", () => removeTodo(todo.id, container));
+    container.appendChild(removeBtn);
+
+    const imageUrl = await fetchDestinationImage(todo.name);
+    if (imageUrl) {
+      container.style.backgroundImage = `url(${imageUrl})`;
+      container.style.backgroundSize = "cover";
+      container.style.backgroundPosition = "center";
+      container.style.borderRadius = "8px";
+      container.style.padding = "10px";
+      container.style.color = "#fff";
+    }
+
+    todoList.appendChild(container);
+  }
+  updateTotals();
+}
+
 
   function addTodo(name, hotelCost, flightCost, foodCost, funCost) {
     const newId = todos.length ? Math.max(...todos.map((t) => t.id)) + 1 : 1;
